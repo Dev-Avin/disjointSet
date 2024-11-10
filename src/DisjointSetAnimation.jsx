@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-
+import "./DisjointSetAnimation.css";
 const DisjointSetAnimation = () => {
   const canvasRef = useRef(null);
   const [nodes, setNodes] = useState([]);
@@ -317,95 +317,106 @@ const DisjointSetAnimation = () => {
     }));
 
   return (
-    <div style={{ display: "flex" }}>
-      <div>
-        <canvas ref={canvasRef} width="600" height="400" />
-      </div>
+    <div className="disjoint-set-container">
+      <canvas ref={canvasRef} className="canvas" />
 
-      <div style={{ marginLeft: "20px" }}>
-        <div>
+      <div className="sidebar">
+        <div className="control-section">
           <input
             type="text"
             placeholder="Element Value"
             value={elementValue}
             onChange={(e) => setElementValue(e.target.value)}
+            className="input-field"
           />
-          <button onClick={() => makeSet(elementValue)}>Make Set</button>
+          <button
+            onClick={() => makeSet(elementValue)}
+            className="control-button"
+          >
+            Make Set
+          </button>
         </div>
 
-        <div>
+        <div className="control-section">
           <input
             type="number"
             placeholder="Element A ID"
             value={elementA}
             onChange={(e) => setElementA(parseInt(e.target.value, 10))}
+            className="input-field"
           />
           <input
             type="number"
-            placeholder="Element B ID "
+            placeholder="Element B ID"
             value={elementB}
             onChange={(e) => setElementB(parseInt(e.target.value, 10))}
+            className="input-field"
           />
-          <button onClick={() => union(elementA, elementB)}>Union</button>
+          <button
+            onClick={() => union(elementA, elementB)}
+            className="control-button"
+          >
+            Union
+          </button>
         </div>
 
-        <div>
+        <div className="control-section">
           <input
             type="number"
             placeholder="Find Element"
             value={findElement}
             onChange={(e) => setFindElement(parseInt(e.target.value, 10))}
+            className="input-field"
           />
-          <button onClick={() => findSet(findElement)}>Find Set</button>
+          <button
+            onClick={() => findSet(findElement)}
+            className="control-button"
+          >
+            Find Set
+          </button>
         </div>
 
-        <label>
-          Path Compression
-          <input
-            type="checkbox"
-            checked={pathCompression}
-            onChange={() => setPathCompression(!pathCompression)}
-          />
-        </label>
-        <label>
-          Union by Rank
-          <input
-            type="checkbox"
-            checked={unionByRank}
-            onChange={() => setUnionByRank(!unionByRank)}
-          />
-        </label>
+        <div className="toggle-section">
+          <label>
+            <input
+              type="checkbox"
+              checked={pathCompression}
+              onChange={() => setPathCompression(!pathCompression)}
+            />
+            Path Compression
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={unionByRank}
+              onChange={() => setUnionByRank(!unionByRank)}
+            />
+            Union by Rank
+          </label>
+        </div>
 
-        <div>
-          <div>
-            <h4>Node Info</h4>
-            <table
-              style={{
-                border: "1px solid black",
-                borderCollapse: "collapse",
-                overflow: "scroll",
-              }}
-            >
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Value</th>
-                  <th>Rank</th>
-                  <th>Parent</th>
+        <div className="node-info">
+          <h4>Node Info</h4>
+          <table className="info-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Value</th>
+                <th>Rank</th>
+                <th>Parent</th>
+              </tr>
+            </thead>
+            <tbody>
+              {getNodeInfoArray().map((nodeInfo) => (
+                <tr key={nodeInfo.id}>
+                  <td>{nodeInfo.id}</td>
+                  <td>{nodeInfo.value}</td>
+                  <td>{nodeInfo.rank}</td>
+                  <td>{nodeInfo.parent}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {getNodeInfoArray().map((nodeInfo) => (
-                  <tr key={nodeInfo.id}>
-                    <td>{nodeInfo.id}</td>
-                    <td>{nodeInfo.value}</td>
-                    <td>{nodeInfo.rank}</td>
-                    <td>{nodeInfo.parent}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
