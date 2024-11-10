@@ -81,12 +81,12 @@ DisjointSetAnimation
 - [React](https://reactjs.org/) - JavaScript library for building user interfaces
 - [Yarn](https://yarnpkg.com/) - Dependency management
 
+## Deloyment Link
+
+- [Vercel](https://disjoint-set.vercel.app/) - Vercel Link
+
 ## Contributing
 
 Feel free to submit issues or pull requests for enhancements and bug fixes.
-
-## License
-
-This project is licensed under the MIT License.
 
 ---
