@@ -17,15 +17,14 @@ const DisjointSetAnimation = () => {
   const [findElement, setFindElement] = useState("");
   const [draggingNode, setDraggingNode] = useState(null);
   const [hoveredNode, setHoveredNode] = useState(null);
-  const [isPanelVisible, setPanelVisible] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
     const resize = () => {
-      canvas.width = window.innerWidth - 300;
-      canvas.height = window.innerHeight - 100;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     };
     window.addEventListener("resize", resize);
     resize();
@@ -317,123 +316,96 @@ const DisjointSetAnimation = () => {
       parent: parents[node.id],
     }));
 
-  const togglePanel = () => {
-    setPanelVisible(!isPanelVisible);
-  };
-
   return (
-    <div
-      style={{
-        display: "flex",
-        padding: "20px",
-        backgroundColor: "#1e1e2f",
-        color: "#e0e0e0",
-        fontFamily: "Arial, sans-serif",
-        borderRadius: "10px",
-        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
-        position: "relative",
-      }}
-    >
-      <canvas
-        ref={canvasRef}
-        width="600"
-        height="400"
-        style={{ border: "2px solid #6f42c1", borderRadius: "10px" }}
-      />
+    <div style={{ display: "flex" }}>
+      <div>
+        <canvas ref={canvasRef} width="600" height="400" />
+      </div>
 
-      {/* Toggle Button */}
-      <button
-        onClick={togglePanel}
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: isPanelVisible ? "330px" : "10px", // Adjust based on panel width
-          padding: "10px 15px",
-          backgroundColor: "#6f42c1",
-          color: "#ffffff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          transition: "right 0.3s",
-          zIndex: "1",
-        }}
-      >
-        {isPanelVisible ? "Hide Panel" : "Show Panel"}
-      </button>
-
-      {/* Side Panel */}
-      <div
-        style={{
-          position: "absolute",
-          right: isPanelVisible ? "0" : "-350px",
-          top: "0",
-          height: "100%",
-          width: "300px",
-          padding: "20px",
-          backgroundColor: "#1e1e2f",
-          boxShadow: "-2px 0px 10px rgba(0, 0, 0, 0.5)",
-          borderRadius: "10px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-          maxWidth: "300px",
-          transition: "right 0.3s",
-        }}
-      >
+      <div style={{ marginLeft: "20px" }}>
         <div>
           <input
             type="text"
             placeholder="Element Value"
             value={elementValue}
             onChange={(e) => setElementValue(e.target.value)}
-            style={{
-              padding: "10px",
-              marginRight: "10px",
-              borderRadius: "5px",
-              border: "1px solid #6f42c1",
-              backgroundColor: "#333",
-              color: "#e0e0e0",
-            }}
           />
-          <button onClick={() => makeSet(elementValue)} style={buttonStyle}>
-            Make Set
-          </button>
+          <button onClick={() => makeSet(elementValue)}>Make Set</button>
         </div>
 
-        {/* Additional controls for Union, Find Set, and checkboxes go here */}
+        <div>
+          <input
+            type="number"
+            placeholder="Element A ID"
+            value={elementA}
+            onChange={(e) => setElementA(parseInt(e.target.value, 10))}
+          />
+          <input
+            type="number"
+            placeholder="Element B ID "
+            value={elementB}
+            onChange={(e) => setElementB(parseInt(e.target.value, 10))}
+          />
+          <button onClick={() => union(elementA, elementB)}>Union</button>
+        </div>
 
-        <div style={{ overflowY: "auto", maxHeight: "200px" }}>
-          <h4 style={{ textAlign: "center", color: "#6f42c1" }}>Node Info</h4>
-          <table
-            style={{
-              width: "100%",
-              border: "1px solid #6f42c1",
-              borderCollapse: "collapse",
-              color: "#e0e0e0",
-            }}
-          >
-            <thead style={{ backgroundColor: "#6f42c1", color: "#ffffff" }}>
-              <tr>
-                <th style={tableHeaderStyle}>ID</th>
-                <th style={tableHeaderStyle}>Value</th>
-                <th style={tableHeaderStyle}>Rank</th>
-                <th style={tableHeaderStyle}>Parent</th>
-              </tr>
-            </thead>
-            <tbody>
-              {getNodeInfoArray().map((nodeInfo) => (
-                <tr
-                  key={nodeInfo.id}
-                  style={{ borderBottom: "1px solid #6f42c1" }}
-                >
-                  <td style={tableCellStyle}>{nodeInfo.id}</td>
-                  <td style={tableCellStyle}>{nodeInfo.value}</td>
-                  <td style={tableCellStyle}>{nodeInfo.rank}</td>
-                  <td style={tableCellStyle}>{nodeInfo.parent}</td>
+        <div>
+          <input
+            type="number"
+            placeholder="Find Element"
+            value={findElement}
+            onChange={(e) => setFindElement(parseInt(e.target.value, 10))}
+          />
+          <button onClick={() => findSet(findElement)}>Find Set</button>
+        </div>
+
+        <label>
+          Path Compression
+          <input
+            type="checkbox"
+            checked={pathCompression}
+            onChange={() => setPathCompression(!pathCompression)}
+          />
+        </label>
+        <label>
+          Union by Rank
+          <input
+            type="checkbox"
+            checked={unionByRank}
+            onChange={() => setUnionByRank(!unionByRank)}
+          />
+        </label>
+
+        <div>
+          <div>
+            <h4>Node Info</h4>
+            <table
+              style={{
+                border: "1px solid black",
+                borderCollapse: "collapse",
+                overflow: "scroll",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Value</th>
+                  <th>Rank</th>
+                  <th>Parent</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {getNodeInfoArray().map((nodeInfo) => (
+                  <tr key={nodeInfo.id}>
+                    <td>{nodeInfo.id}</td>
+                    <td>{nodeInfo.value}</td>
+                    <td>{nodeInfo.rank}</td>
+                    <td>{nodeInfo.parent}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -441,35 +413,3 @@ const DisjointSetAnimation = () => {
 };
 
 export default DisjointSetAnimation;
-
-const buttonStyle = {
-  padding: "10px 15px",
-  backgroundColor: "#6f42c1",
-  color: "#fff",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-  transition: "background-color 0.3s",
-};
-const inputStyle = {
-  padding: "10px",
-  borderRadius: "5px",
-  border: "1px solid #6f42c1",
-  backgroundColor: "#333",
-  color: "#e0e0e0",
-  width: "calc(100% - 30px)",
-};
-const labelStyle = {
-  color: "#e0e0e0",
-  fontSize: "14px",
-  display: "flex",
-  alignItems: "center",
-};
-const tableHeaderStyle = {
-  padding: "10px",
-  textAlign: "center",
-};
-const tableCellStyle = {
-  padding: "8px",
-  textAlign: "center",
-};
