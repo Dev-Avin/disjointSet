@@ -1,5 +1,6 @@
 .disjoint-set-container {
   display: flex;
+  flex-direction: row;
   height: 100vh;
   overflow: hidden;
   background-color: #121212;
@@ -13,10 +14,6 @@
 }
 
 .sidebar {
-  position: absolute;
-  top: 0;
-  right: 0;
-
   height: 100vh;
   overflow: scroll;
   width: 300px;
