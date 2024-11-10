@@ -126,30 +126,17 @@ const DisjointSetAnimation = () => {
 
     if (pathCompression) {
       // Apply path compression after finding the root
-      traversalPath.forEach((node, index) => {
-        setTimeout(() => {
-          nodes[node].setStatus("active");
-          setNodes([...nodes]);
-
-          // Update parents for path compression
-          if (parents[node] !== root) {
-            parents[node] = root;
-          }
-
-          // Reset node status after a short delay
-          setTimeout(() => {
-            nodes[node].setStatus("normal");
-            setNodes([...nodes]);
-          }, 500);
-        }, index * 1000);
+      traversalPath.forEach((node) => {
+        // Update parents for path compression
+        if (parents[node] !== root) {
+          parents[node] = root;
+        }
       });
 
       // Update all state changes after path compression
-      setTimeout(() => {
-        setParents([...parents]);
-        updateLinks(); // Update links once all parent changes are done
-        resetAndRecalculateRanks(); // Reset and recalculate ranks at the end
-      }, traversalPath.length * 1000);
+      setParents([...parents]);
+      resetAndRecalculateRanks(); // Reset and recalculate ranks at the end
+      updateLinks(); // Update links once all parent changes are done
     }
 
     return root;
